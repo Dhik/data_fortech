@@ -1,0 +1,147 @@
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateTersangkaTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('tersangka', function (Blueprint $table) {
+            $table->id('id_tersangka');
+            $table->string('nama_tersangka');
+            $table->string('alamat_tersangka');
+            $table->integer('umur_tersangka');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('user_id')->on('user');
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('tersangka');
+    }
+}
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateBarangBuktiTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('barangbukti', function (Blueprint $table) {
+            $table->id('id_barangbukti');
+            $table->unsignedBigInteger('id_tersangka');
+            $table->string('jenis_barangbukti');
+            $table->foreign('id_tersangka')->references('id_tersangka')->on('tersangka');
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('barangbukti');
+    }
+}
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateJaksaTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('jaksa', function (Blueprint $table) {
+            $table->id('id_jaksa');
+            $table->string('nama_jaksa');
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('jaksa');
+    }
+}
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreatePerkaraTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('perkara', function (Blueprint $table) {
+            $table->id('id_perkara');
+            $table->unsignedBigInteger('id_tersangka');
+            $table->unsignedBigInteger('id_barangbukti');
+            $table->unsignedBigInteger('id_jaksa');
+            $table->string('pasal');
+            
+            $table->foreign('id_tersangka')->references('id_tersangka')->on('tersangka');
+            $table->foreign('id_barangbukti')->references('id_barangbukti')->on('barangbukti');
+            $table->foreign('id_jaksa')->references('id_jaksa')->on('jaksa');
+            
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('perkara');
+    }
+}
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateSidangTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('sidang', function (Blueprint $table) {
+            $table->id('id_sidang');
+            $table->unsignedBigInteger('id_perkara');
+            $table->date('jadwal_sidang');
+            $table->string('status_sidang');
+            
+            $table->foreign('id_perkara')->references('id_perkara')->on('perkara');
+            
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('sidang');
+    }
+}
+
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateUserTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('user', function (Blueprint $table) {
+            $table->id('user_id');
+            $table->string('user_name');
+            $table->string('user_password');
+            $table->string('user_role');
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('user');
+    }
+}
