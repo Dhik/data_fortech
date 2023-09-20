@@ -1,147 +1,34 @@
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Route;
 
-class CreateTersangkaTable extends Migration
-{
-    public function up()
-    {
-        Schema::create('tersangka', function (Blueprint $table) {
-            $table->id('id_tersangka');
-            $table->string('nama_tersangka');
-            $table->string('alamat_tersangka');
-            $table->integer('umur_tersangka');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('user_id')->on('user');
-            $table->timestamps();
-        });
-    }
+// Display the login form
+Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
 
-    public function down()
-    {
-        Schema::dropIfExists('tersangka');
-    }
-}
+// Handle login form submission
+Route::post('/login', 'Auth\LoginController@login');
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+// Display the registration form
+Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 
-class CreateBarangBuktiTable extends Migration
-{
-    public function up()
-    {
-        Schema::create('barangbukti', function (Blueprint $table) {
-            $table->id('id_barangbukti');
-            $table->unsignedBigInteger('id_tersangka');
-            $table->string('jenis_barangbukti');
-            $table->foreign('id_tersangka')->references('id_tersangka')->on('tersangka');
-            $table->timestamps();
-        });
-    }
+// Handle registration form submission
+Route::post('/register', 'Auth\RegisterController@register');
 
-    public function down()
-    {
-        Schema::dropIfExists('barangbukti');
-    }
-}
+// Display the password reset request form
+Route::get('/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+// Handle password reset request form submission
+Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 
-class CreateJaksaTable extends Migration
-{
-    public function up()
-    {
-        Schema::create('jaksa', function (Blueprint $table) {
-            $table->id('id_jaksa');
-            $table->string('nama_jaksa');
-            $table->timestamps();
-        });
-    }
+// Display the password reset form
+Route::get('/password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 
-    public function down()
-    {
-        Schema::dropIfExists('jaksa');
-    }
-}
+// Handle password reset form submission
+Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+// Display the confirm password form
+Route::get('/password/confirm', 'Auth\ConfirmPasswordController@showConfirmForm')->name('password.confirm');
 
-class CreatePerkaraTable extends Migration
-{
-    public function up()
-    {
-        Schema::create('perkara', function (Blueprint $table) {
-            $table->id('id_perkara');
-            $table->unsignedBigInteger('id_tersangka');
-            $table->unsignedBigInteger('id_barangbukti');
-            $table->unsignedBigInteger('id_jaksa');
-            $table->string('pasal');
-            
-            $table->foreign('id_tersangka')->references('id_tersangka')->on('tersangka');
-            $table->foreign('id_barangbukti')->references('id_barangbukti')->on('barangbukti');
-            $table->foreign('id_jaksa')->references('id_jaksa')->on('jaksa');
-            
-            $table->timestamps();
-        });
-    }
+// Handle confirm password form submission
+Route::post('/password/confirm', 'Auth\ConfirmPasswordController@confirm');
 
-    public function down()
-    {
-        Schema::dropIfExists('perkara');
-    }
-}
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-class CreateSidangTable extends Migration
-{
-    public function up()
-    {
-        Schema::create('sidang', function (Blueprint $table) {
-            $table->id('id_sidang');
-            $table->unsignedBigInteger('id_perkara');
-            $table->date('jadwal_sidang');
-            $table->string('status_sidang');
-            
-            $table->foreign('id_perkara')->references('id_perkara')->on('perkara');
-            
-            $table->timestamps();
-        });
-    }
-
-    public function down()
-    {
-        Schema::dropIfExists('sidang');
-    }
-}
-
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-class CreateUserTable extends Migration
-{
-    public function up()
-    {
-        Schema::create('user', function (Blueprint $table) {
-            $table->id('user_id');
-            $table->string('user_name');
-            $table->string('user_password');
-            $table->string('user_role');
-            $table->timestamps();
-        });
-    }
-
-    public function down()
-    {
-        Schema::dropIfExists('user');
-    }
-}
+// Handle logout
+Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
