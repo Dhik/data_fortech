@@ -18,3 +18,8 @@
         </form>
     </div>
 @endsection
+
+
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+https://cheatsheetseries.owasp.org/cheatsheets/Clickjacking_Defense_Cheat_Sheet.html
